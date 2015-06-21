@@ -461,8 +461,8 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     cout << "NONE\n";
   }
   fclose(input);
-}
   input = NULL;
+}
 catalog read_catalog() {
   struct catalog c;
   string str = "";
