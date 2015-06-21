@@ -41,6 +41,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-src/.dump
-src/.o
-src/.out
+*.dump
+*.out
+*.o
