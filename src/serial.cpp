@@ -88,8 +88,8 @@ void get_bin() {
           i++;
           l++;
         }
-                                if (str3[count] == "true")str3[count] = "t";
-                                else str3[count] = "f";
+         //                       if (str3[count] == "true")str3[count] = "t";
+         //                       else str3[count] = "f";
       } else {
         str2 = "int";
         string t = "";
@@ -115,6 +115,26 @@ void get_bin() {
       count++;
       str3[count] = "";
     }
+    /*
+    int ss = 0;
+    out << count << ' ';
+    for (int j = 0; j < count; j++) {
+      out << aid[j] << ' ';
+    }
+    for (int j = 0; j < count; j++) {
+      out << ss << ' ';
+      ss += off[j];
+      sum += off[j];
+    }
+    out << sum << ' ';
+    for (int j = 0; j < count; j++) {
+      out << str3[j];
+    }
+    out << endl;
+  }
+  out.close();
+  fclose(stdin);
+  */
 
     int ss = 0;
     //out << count << ' ';
@@ -122,7 +142,7 @@ void get_bin() {
     //tmp += ' ';
     for (int j = 0; j < count; j++) {
       //out << aid[j] << ' ';
-      tmp += (char)aid[j];
+      tmp += (char)(aid[j]);
       //tmp += ' ';
     }
     for (int j = 0; j < count; j++) {
@@ -150,7 +170,16 @@ void get_bin() {
     }
   }
   fwrite(tmp.data(), 32, tmp.length(), out);
+
+
   fclose(out);
+  /*out = fopen("create.data", "rb+");
+  char* text ;
+  fread(text, 32, PAGE_SIZE/32, out);
+  cout << text << endl;
+  fclose(out);*/
+  out = NULL;
+
   fclose(stdin);
 }
 
@@ -308,7 +337,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     if (type == "") type = flag[3];
   }
 
-  int aid[100000];
+  int aid[1000000];
   int id_num = 0;
   for (int j = 1; j <= catalog->num; j++) {
     if (key == catalog->key_name[j-1] && type == catalog->key_type[j-1]) {
@@ -323,9 +352,15 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
   bool is_find = false;
   char* read_buffer;
   string str = "", str1 = "";
-  FILE* input = fopen("create.data", "wb+");
-  for (int i_ = 0; i_ < id_num; i_++) {
-  int count = catalog->count[aid[i_]];
+  FILE* input = fopen("create.data", "rb+");
+  if (input == NULL) {
+    cout << "no create.data\n";
+    return;
+  }
+
+  for (int i_ = 0; i_ < id_num; i_++) { //
+
+  int count = catalog->count[aid[i_]-1];
 
   bool is_find_key_in_this_one;
 
@@ -344,16 +379,17 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     is_find_key_in_this_one = false;
     found_num = 0;
     //get ser count (attributes number)
-      if (i > str.size()) {
+      if (i >= str.size()) {
       fread(read_buffer, 32, PAGE_SIZE/32, input);
       str = "";
       str += read_buffer;
       i = 0;
     }
     ser.count = str[i++];
+    cout << "get ser count (attributes number)\n";
     //get ser aid
     for (int j = 0; j < ser.count; j++) {
-      if (i > str.size()) {
+      if (i >= str.size()) {
         fread(read_buffer, 32, PAGE_SIZE/32, input);
         str = "";
         str += read_buffer;
@@ -361,6 +397,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       }
       ser.aid[j] = str[i++];
     }
+    cout << "get ser aid\n";
     //judge whether the keyA is in this json
     for (int j = 0; j < ser.count; j++) {
       if (aid[i_] == ser.aid[j]) {
@@ -369,10 +406,11 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         count--;
       }
     }
+    cout << "judge whether the keyA is in this json\n" << count << "\n";
     if (is_find_key_in_this_one) {
       for (int j = 0; j < ser.count; j++) {
           for (int j = 0; j < ser.count; j++) {
-              if (i > str.size()) {
+              if (i >= str.size()) {
                 fread(read_buffer, 32, PAGE_SIZE/32, input);
                 str = "";
                 str += read_buffer;
@@ -382,20 +420,22 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
             }
         }
       //get ser sum (the length of data)
-      if (i > str.size()) {
+      if (i >= str.size()) {
           fread(read_buffer, 32, PAGE_SIZE/32, input);
           str = "";
           str += read_buffer;
           i = 0;
         }
         ser.sum = str[i++];
+      cout << "get ser sum (the length of data)\n";
       //get ser len
       for (int j = 0; j <= ser.count; j++) {
         ser.len[j] = ser.offset[j+1]-ser.offset[j];
       }
+      cout << "get ser len\n";
       //get ser data
       while (ser.data.length() < ser.sum) {
-        if (i > str.size()) {
+        if (i >= str.size()) {
               fread(read_buffer, 32, PAGE_SIZE/32, input);
               str = "";
               str += read_buffer;
@@ -403,6 +443,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
             }
         ser.data += str[i++];
       }
+      cout << "get ser data\n";
       //judge whethe the valueB and the found_value from this json is equals
       for (int j = 0; j < found_num; j++) {
         string found_value = ser.data.substr(ser.offset[found_id_[j]], ser.len[found_id_[j]]);
@@ -412,6 +453,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
           break;
         }
       }
+      cout << "judge whethe the valueB and the found_value from this json is equals\n";
     }
   }
   }
@@ -420,7 +462,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
   }
   fclose(input);
 }
-
+  input = NULL;
 catalog read_catalog() {
   struct catalog c;
   string str = "";
