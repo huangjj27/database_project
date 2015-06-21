@@ -19,137 +19,6 @@ string numtostr(int n) {
 }
 
 void get_bin() {
-  /*struct catalog c;
-  string str = "";
-  string str1 = "";
-  string str2 = "";
-  string str3 = "";
-  string str4 = "";
-  c.num = 0;
-  string data = "";
-  ifstream input;
-  input.open("catalog.data");
-  while(getline(input,str)) {
-    int i = 0;
-    while(str[i] != ' ') i++;
-    i++;
-    while(str[i] != ' ') {
-      str1 += str[i];
-      i++;
-    }
-    i++;
-    while(str[i] != ' ') {
-      str2 += str[i];
-      i++;
-    }
-    while(str[i] != ' ') {
-      str4 += str[i];
-      i++;
-    }
-    c.key_name[c.num] = str1;
-    c.key_type[c.num] = str2;
-    c.count[c.num] = strtonum(str4);
-    c.num++;
-    str2 = "";
-    str1 = "";
-    str4 = "";
-  }
-  input.close();
-
-
-  freopen("data2.json","r",stdin);
-  getline(cin,str);
-  FILE* out = fopen("create.data", "wb+");
-  string tmp = "";
-  while(getline(cin,str)) {
-    int sum = 0;
-    int count = 0;
-    int aid[50];
-    int off[50];
-    string str3[50];
-    str3[0] = "";
-    if (str == "[") continue;
-    if (str == "]") break;
-    int i = 2;
-    int len = str.size();
-    while(i < len - 1) {
-      int l = 0;
-      while(str[i] != '"') {
-        str1 += str[i];
-        i++;
-      }
-      i += 3;
-      if (str[i] == '{') {
-        str2 = "json";
-        while(str[i] != '}') {
-          str3[count] += str[i];
-          i++;
-          l++;
-        }
-        str3[count] += '}';
-        l++;
-      } else if (str[i] == '[') {
-        str2 = "array";
-        while(str[i] != ']') {
-          str3[count] += str[i];
-          i++;
-          l++;
-        }
-        str3[count] += ']';
-        l++;
-      } else if (str[i] == '"') {
-        str2 = "text";
-        i++;
-        while(str[i] != '"') {
-          str3[count] += str[i];
-          i++;
-          l++;
-        }
-      } else if (str[i] == 'f' || str[i] == 't') {
-        str2 = "bool";
-        while(str[i] != ',' && str[i] != '}') {
-          str3[count] += str[i];
-          i++;
-          l++;
-        }
-      } else {
-        str2 = "int";
-        while(str[i] != ',' && str[i] != '}') {
-          str3[count] += str[i];
-          i++;
-          l++;
-        }
-      }
-      while(str[i] != ',' && i < len - 1) i++;
-      if (i != len - 1) i += 3;
-      off[count] = l;
-      for (int j = 0; j < c.num; j++) {
-        if(str1 == c.key_name[j] && str2 == c.key_type[j]) {
-          aid[count] = j + 1;
-          break;
-        }
-      }
-      str2 = "";
-      str1 = "";
-      count++;
-      str3[count] = "";
-    }
-    for (int j = 1; j < count; j++) {
-      for (int k = 0; k < count - j; k++) {
-        if (aid[k] > aid[k + 1]) {
-          int tmp = aid[k];
-          aid[k] = aid[k+1];
-          aid[k+1] = tmp;
-          tmp = off[k];
-          off[k] = off[k+1];
-          off[k+1] = tmp;
-          string temp = str3[k];
-          str3[k] = str3[k+1];
-          str3[k+1] = temp;
-        }
-      }
-    }*/
-
   struct catalog c;
   string str = "";
   string str1 = "";
@@ -551,8 +420,9 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
   }
   fclose(input);
 }
+
 catalog read_catalog() {
-    struct catalog c;
+  struct catalog c;
   string str = "";
   string str1 = "";
   string str2 = "";

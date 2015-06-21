@@ -20,3 +20,5 @@ cleanAll:
 	rm $(OBJ) $(EXC) $(DATA)
 cleanOBJ:
 	RM $(OBJ)
+cleanDATA:
+	rm $(DATA)
