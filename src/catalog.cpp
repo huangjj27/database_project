@@ -97,7 +97,7 @@ void BuildCatalogFile(string infile_name) {
   outfile.open("catalog.data", ios::ate | ios::out);
   string str;
   Node* root = NULL;
-  // outfile << "_id\tKey_name\tKey_type\tcount" << endl;
+  outfile << "_id\tKey_name\tKey_type\tcount" << endl;
   while (getline(infile, str)) {
     BuildCatalogTree(root, str);
   }

@@ -49,9 +49,7 @@ void get_bin() {
     int aid[50];
     int off[50];
     string str3[50];
-
     str3[0] = "";
-
     int i = 2;                  // ignore '{' and '\“' at the line beginning
     int len = str.size();
     while (i < len - 1) {
