@@ -5,11 +5,8 @@
 #include "serial.h"
 using namespace std;
 
-void InsertByFilename() {
-  string str;
-  cout << "please input the data file name: ";
-  cin >> str;
-  BuildCatalogFile(str);
+void InsertByFilename(string file_name) {
+  BuildCatalogFile(file_name);
   cout << "catalog built!" << endl;
 }
 
@@ -22,27 +19,37 @@ void CheckCatalog() {
   }
 }
 
-void MatchKeyAWithValueB(string key, string value) {
-  get_bin();
+void MatchKeyAWithValueB(string key, string value, string file_name) {
+  get_bin(file_name);
   struct catalog c = read_catalog();
   find_A_equals_B(key, value, &c);
 }
 int main(void) {
   std::string operation;
   std::string key, value;
+  std::string file_name;
   cout << "please input \"insert\"" << endl;
   cin >> operation;
-  if (operation == "insert") InsertByFilename();
+  if (operation == "insert") {
+    cout << "please input the data file name: " << endl;
+    cin >> file_name;
+    InsertByFilename(file_name);
+  }
   cout << "please give the command(insert check find)" << endl;
   while (std::cin >> operation) {
-    if (operation == "insert") InsertByFilename();
+    if (operation == "insert") {
+      cout << "please input the data file name: " << endl;
+      cin >> file_name;
+      InsertByFilename(file_name);
+    }
     else if (operation == "check") CheckCatalog();
     else if (operation == "find") {
-      cout << "please input A and B" << endl;
-      cin >> key >> value;
-      MatchKeyAWithValueB(key, value);
-      //get_bin();
-    } else return 0;
+    cout << "please input A and B"<<endl;
+    cin >> key >> value;
+    MatchKeyAWithValueB(key, value, file_name);
+                //get_bin();
+  }
+    else return 0;
   }
   return 0;
 }
