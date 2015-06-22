@@ -2,7 +2,7 @@
 #define PAGE_SIZE 8192
 int strtonum(string s);
 string numtostr(int n);
-
+// è¯•ä¸€ä¸‹èƒ½ä¸èƒ½è¾“å…¥ä¸­æ–‡
 union intandchar
 {
   int a;
@@ -42,8 +42,8 @@ void get_bin() {
   //getline(cin,str);
   //ofstream out("create.data");
   while(getline(cin,str)) {
-    if (str == "[") continue;     //ÎÄ¼ş¿ªÍ·±êÖ¾
-    if (str == "]") break;        //ÎÄ¼ş½áÊø±êÖ¾
+    if (str == "[") continue;     //æ–‡ä»¶å¼€å¤´æ ‡å¿—
+    if (str == "]") break;        //æ–‡ä»¶ç»“æŸæ ‡å¿—
     int sum = 0;
     int count = 0;
     int aid[50];
@@ -52,16 +52,16 @@ void get_bin() {
 
     str3[0] = "";
 
-    int i = 2;          //ºöÂÔ¿ªÍ·µÄ{¡°
+    int i = 2;          //å¿½ç•¥å¼€å¤´çš„{â€œ
     int len = str.size();
     while(i < len - 1) {
-      int l = 0;        //key_nameµÄÆ«ÒÆÁÁ
+      int l = 0;        //key_nameçš„åç§»äº®
       while(str[i] != '"') {
         str1 += str[i];
         i++;
       }
-      i += 3;         //ºöÂÔ¡±£ººÍ¿Õ¸ñ
-      if (str[i] == '{') {      //key_typeµÄÆ«ÒÆÁ¿
+      i += 3;         //å¿½ç•¥â€ï¼šå’Œç©ºæ ¼
+      if (str[i] == '{') {      //key_typeçš„åç§»é‡
         str2 = "json";
         while(str[i] != '}') {
           str3[count] += str[i];
