@@ -237,8 +237,7 @@ string sertojson(serial ser, catalog* scanlog1) {
       }
       if ((scanlog->key_type[id-1]) == flag[4]) {
         for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-          if (ser.data[j] == 't') ans += "true";
-          if (ser.data[j] == 'f') ans += "false";
+          ans += ser.data[j];  // bool, true of false, add to ans as a string
         }
       }
           if (i != ser.count - 1) ans += ", ";
@@ -276,11 +275,11 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     value_ = value;
   }
 
-  int aid[1000000];
-  int id_num = 0;
+  int aid;
   for (int j = 1; j <= catalog->num; j++) {
     if (key == catalog->key_name[j-1] && type == catalog->key_type[j-1]) {
-            aid[id_num++] = j;
+            aid = j;
+            break;
         }
     }
   if (id_num == 0) {
@@ -297,9 +296,8 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     return;
   }
 
-  for (int i_ = 0; i_ < id_num; i_++) { //
 
-  int count = catalog->count[aid[i_]-1];
+  int count = catalog->count[aid-1];
 
   bool is_find_key_in_this_one;
 
@@ -346,7 +344,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     cout << "get ser aid\n";
     //judge whether the keyA is in this json
     for (int j = 0; j < ser.count; j++) {
-      if (aid[i_] == ser.aid[j]) {
+      if (aid == ser.aid[j]) {
         is_find_key_in_this_one = true;
         found_id_[found_num++] = j;
         count--;
@@ -434,7 +432,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         }
     }
   }
-  }
+  
   if (!is_find) {
     cout << "NONE\n";
   }
