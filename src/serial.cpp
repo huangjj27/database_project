@@ -3,10 +3,10 @@
 int strtonum(string s);
 string numtostr(int n);
 
-union intandchar
-{
-  int a;
-  char b[4];
+union intandchar {
+  // a basic unit of data. can be either of the list.
+  int a;      //  a integer of 32 bits
+  char b[4];  //  or 4 bytes of characters
 };
 
 int strtonum(string s) {
@@ -36,14 +36,16 @@ void get_bin() {
 
   c = read_catalog();
 
+  // create a file of serialized binary data
   FILE* out = fopen("create.data", "wb+");
   string tmp = "";
+
   freopen("data2.json","r",stdin);
   //getline(cin,str);             // block the table header.
   //ofstream out("create.data");
   while(getline(cin,str)) {
-    if (str == "[") continue;     // 文件开头标志
-    if (str == "]") break;        // 文件结束标志
+    if (str == "[") continue;     // sign of file beginning
+    if (str == "]") break;        // sign of file end
     int sum = 0;
     int count = 0;
     int aid[50];
@@ -52,16 +54,16 @@ void get_bin() {
 
     str3[0] = "";
 
-    int i = 2;          // 忽略开头的{“
+    int i = 2;          // ignoer '{' and '\“' at the line beginning
     int len = str.size();
     while(i < len - 1) {
-      int l = 0;        // key_name的偏移量
+      int l = 0;        // offset of key_name
       while(str[i] != '"') {
         str1 += str[i];
         i++;
       }
-      i += 3;                   // 忽略”：和空格
-      if (str[i] == '{') {      // key_type的偏移量
+      i += 3;                   // ignore the string "\": "
+      if (str[i] == '{') {      // offset of key_type
         str2 = "json";
         while(str[i] != '}') {
           str3[count] += str[i];
@@ -94,8 +96,8 @@ void get_bin() {
           i++;
           l++;
         }
-         //                       if (str3[count] == "true")str3[count] = "t";
-         //                       else str3[count] = "f";
+         //if (str3[count] == "true")str3[count] = "t";
+         //else str3[count] = "f";
       } else {
         str2 = "int";
         string t = "";
@@ -250,7 +252,6 @@ string sertojson(serial ser, catalog* scanlog1) {
 }
 
 void find_A_equals_B(string key, string value, catalog* catalog) {
-
   if (catalog->num == 0) {
     cout << "NONE\n";
     return;
@@ -367,7 +368,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
             }
         ser.offset[j_] = int_.a;
         }
-      //get ser sum (the length of data)
+      // get ser sum (the length of data)
       for (int j = 0; j < 4; j++) {
           if (i >= str.size()) {
               fread(read_buffer, PAGE_SIZE, 1, input);
@@ -379,12 +380,12 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         }
         ser.sum = int_.a;
       cout << "get ser sum (the length of data)\n";
-      //get ser len
+      // get ser len
       for (int j = 0; j <= ser.count; j++) {
         ser.len[j] = ser.offset[j+1]-ser.offset[j];
       }
       cout << "get ser len\n";
-      //get ser data
+      // get ser data
       while (ser.data.length() < ser.sum) {
         if (i >= str.size()) {
               fread(read_buffer, PAGE_SIZE, 1, input);
@@ -395,7 +396,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         ser.data += str[i++];
       }
       cout << "get ser data\n";
-      //judge whethe the valueB and the found_value from this json is equals
+      // judge whether the valueB and the found_value from this json is equals
       for (int j = 0; j < found_num; j++) {
         string found_value = ser.data.substr(ser.offset[found_id_[j]], ser.len[found_id_[j]]);
         if (value_ == found_value) {
