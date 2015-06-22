@@ -55,7 +55,6 @@ void get_bin() {
     str3[0] = "";
 
     int i = 2;          // ignoer '{' and '\“' at the line beginning
-    int i = 2;					//忽略开头的{“
     int len = str.size();
     while (i < len - 1) {
       int l = 0;				//key_name的偏移亮
@@ -97,8 +96,7 @@ void get_bin() {
           i++;
           l++;
         }
-        //if (str3[count] == "true")str3[count] = "t";
-        //else str3[count] = "f";
+
       } else {
         str2 = "int";
         while (str[i] != ',' && str[i] != '}') {
@@ -123,7 +121,6 @@ void get_bin() {
     }
 
     int ss = 0;
-    //out << count << ' ';
     intandchar int_;
     int_.a = count;
 
@@ -131,42 +128,30 @@ void get_bin() {
     tmp += int_.b[1];
     tmp += int_.b[2];
     tmp += int_.b[3];
-    //tmp += ' ';
     for (int j = 0; j < count; j++) {
-      //out << aid[j] << ' ';
       int_.a = aid[j];
-
       tmp += int_.b[0];
       tmp += int_.b[1];
       tmp += int_.b[2];
       tmp += int_.b[3];
-      //tmp += ' ';
     }
     for (int j = 0; j < count; j++) {
-      //out << ss << ' ';
       int_.a = ss;
       tmp += int_.b[0];
       tmp += int_.b[1];
       tmp += int_.b[2];
       tmp += int_.b[3];
-      //tmp += ' ';
       ss += off[j];
       sum += off[j];
     }
-    //out << sum << ' ';
     int_.a = sum;
     tmp += int_.b[0];
     tmp += int_.b[1];
     tmp += int_.b[2];
     tmp += int_.b[3];
-    //tmp += ' ';
     for (int j = 0; j < count; j++) {
-      //for (unsigned int i = 0; i < str3[j].length(); i++) out << str3[j][i];
-      //out << str3[j] << ' ';
       tmp += str3[j];
-      //tmp += ' ';
     }
-    //out << endl;
     tmp += "\n";
 
     if (tmp.size() / PAGE_SIZE) {
@@ -178,11 +163,6 @@ void get_bin() {
 
 
   fclose(out);
-  /*out = fopen("create.data", "rb+");
-  char* text ;
-  fread(text, 32, PAGE_SIZE/32, out);
-  cout << text << endl;
-  fclose(out);*/
   out = NULL;
   fclose(stdin);
 }
