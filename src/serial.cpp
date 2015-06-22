@@ -39,7 +39,7 @@ void get_bin() {
   FILE* out = fopen("create.data", "wb+");
   string tmp = "";
   freopen("data2.json","r",stdin);
-  getline(cin,str);
+  //getline(cin,str);
   //ofstream out("create.data");
   while(getline(cin,str)) {
     if (str == "[") continue;     //文件开头标志
