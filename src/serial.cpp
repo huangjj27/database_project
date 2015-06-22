@@ -54,16 +54,16 @@ void get_bin() {
 
     str3[0] = "";
 
-    int i = 2;          // ignoer '{' and '\“' at the line beginning
+    int i = 2;          // ignore '{' and '\“' at the line beginning
     int len = str.size();
     while (i < len - 1) {
-      int l = 0;				//key_name的偏移亮
+      int l = 0;				// offset of key_name
       while (str[i] != '"') {
         str1 += str[i];
         i++;
       }
-      i += 3;					//忽略”：和空格
-      if (str[i] == '{') {			//key_type的偏移量
+      i += 3;					          // ignore the string "\": "
+      if (str[i] == '{') {			// offset of key_type
         str2 = "json";
         while (str[i] != '}') {
           str3[count] += str[i];
