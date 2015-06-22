@@ -505,7 +505,9 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         ser.sum = int_.a;
       i += ser.sum;
       if (i >= str.size()) {
-          fread(read_buffer, 1, PAGE_SIZE/8, input);
+          if (fread(read_buffer, 1, PAGE_SIZE/8, input)) {
+          break;
+        }
           str = "";
           str += read_buffer;
           i -= PAGE_SIZE/8;
