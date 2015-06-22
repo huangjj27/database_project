@@ -1,4 +1,4 @@
-#include <iostream>
+//#include <iostream>
 #include <fstream>
 #include <string>
 #include "catalog.h"
@@ -38,9 +38,10 @@ int main(void) {
     if (operation == "insert") InsertByFilename();
     else if (operation == "check") CheckCatalog();
     else if (operation == "find") {
-      cout << "please input A and B" << endl;
-      cin >> key >> value;
-      MatchKeyAWithValueB(key, value);
+      //cout << "please input A and B" << endl;
+      //cin >> key >> value;
+      //MatchKeyAWithValueB(key, value);
+      get_bin();
     } else return 0;
   }
   return 0;
