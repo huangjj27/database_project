@@ -3,6 +3,11 @@
 #include <string>
 #include "catalog.h"
 #include "serial.h"
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<stdlib.h>
+
 using namespace std;
 
 void InsertByFilename(string file_name) {
@@ -25,6 +30,9 @@ void MatchKeyAWithValueB(string key, string value, string file_name) {
   find_A_equals_B(key, value, &c);
 }
 int main(void) {
+  struct timeval tpstart,tpend;
+  float timeuse;
+  clock_t start, finish;
   std::string operation;
   std::string key, value;
   std::string file_name;
@@ -32,24 +40,44 @@ int main(void) {
   cin >> operation;
   if (operation == "insert") {
     cout << "please input the data file name: " << endl;
-    cin >> file_name;
-    InsertByFilename(file_name);
+    cin >> file_name; 
+    start = clock();
+    InsertByFilename(file_name); 
+    finish = clock();
+    timeuse = (double)(finish-start)/CLOCKS_PER_SEC;
+    cout << "Total time:" << timeuse << " seconds" <<endl;
+    
   }
   cout << "please give the command(insert check find)" << endl;
   while (std::cin >> operation) {
     if (operation == "insert") {
       cout << "please input the data file name: " << endl;
       cin >> file_name;
-      InsertByFilename(file_name);
+      start = clock();
+      InsertByFilename(file_name); 
+      finish = clock();
+      timeuse = (double)(finish-start)/CLOCKS_PER_SEC;
+      cout << "Total time:" << timeuse << " seconds" <<endl;
+
     }
-    else if (operation == "check") CheckCatalog();
+    else if (operation == "check") {
+      start = clock();
+      CheckCatalog();
+      finish = clock();
+      timeuse = (double)(finish-start)/CLOCKS_PER_SEC;
+      cout << "Total time:" << timeuse << " seconds" <<endl;
+    }
     else if (operation == "find") {
-    cout << "please input A and B"<<endl;
-    cin >> key >> value;
-    MatchKeyAWithValueB(key, value, file_name);
-                //get_bin();
-  }
+      cout << "please input A and B"<<endl;
+      cin >> key >> value;
+      start = clock();
+      MatchKeyAWithValueB(key, value, file_name);
+      finish = clock();
+      timeuse = (double)(finish-start)/CLOCKS_PER_SEC;
+      cout << "Total time:" << timeuse << " seconds" <<endl;
+    }
     else return 0;
+    cout << "please give the command(insert check find)" << endl;
   }
   return 0;
 }
