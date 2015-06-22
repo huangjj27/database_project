@@ -54,16 +54,16 @@ void get_bin() {
 
     str3[0] = "";
 
-    int i = 2;          // ignore '{' and '\“' at the line beginning
+    int i = 2;                  // ignore '{' and '\“' at the line beginning
     int len = str.size();
     while (i < len - 1) {
-      int l = 0;				// offset of key_name
+      int l = 0;                // offset of key_name
       while (str[i] != '"') {
         str1 += str[i];
         i++;
       }
-      i += 3;					          // ignore the string "\": "
-      if (str[i] == '{') {			// offset of key_type
+      i += 3;                   // ignore the string "\": "
+      if (str[i] == '{') {      // offset of key_type
         str2 = "json";
         while (str[i] != '}') {
           str3[count] += str[i];
@@ -222,64 +222,97 @@ string sertojson(serial ser, catalog* scanlog1) {
   return ans;
 }
 
-
-
 void find_A_equals_B(string key, string value, catalog* catalog) {
-
   if (catalog->num == 0) {
     cout << "NONE\n";
     return;
   }
 
-  int aid = 0;
-  for (int i = 0; i < catalog->num; i++) {
-    if (key == catalog->key_name[i]) {
-      aid = i;
+  intandchar int_;
+  string value_ = "";
+  string type = "", flag[5] = { "json", "array", "text", "int", "bool" };
+  if (value[0] == '[' && value[value.size() - 1] == ']') type = flag[1];
+  else if (value[0] == '{' && value[value.size() - 1] == '}') type = flag[0];
+  else if (value == "true" || value == "false") type = flag[4];
+  else {
+    for (int j = 0; j < value.size(); j++) {
+      if (value[j] > '9' || value[j] < '0') {
+        type = flag[2];
+        break;
+      }
+    }
+    if (type == "") type = flag[3];
+  }
+  value_ = value;
+
+  int aid;
+  for (int j = 1; j <= catalog->num; j++) {
+    if (key == catalog->key_name[j - 1] && type == catalog->key_type[j - 1]) {
+      aid = j;
       break;
     }
   }
-  //cout << "wuchunshishabi"<<endl;
   if (aid == 0) {
     cout << "NONE\n";
     return;
   }
 
-  int count = catalog->count[aid];
+  bool is_find = false;
+  char read_buffer[PAGE_SIZE];
+  int buffer_size = 0;
+  string str = "", str1 = "";
+  FILE* input = fopen("create.data", "rb+");
+  if (input == NULL) {
+    cout << "no create.data\n";
+    return;
+  }
+
+
+  int count = catalog->count[aid - 1];
 
   bool is_find_key_in_this_one;
-  bool is_find = false;
-  string str, str1 = "";
-  ifstream input;
+
   serial ser;
   int found_id_[50] = { 0 };
   int found_num = 0;
-  input.open("create.data");
-
-  while (getline(input, str)) {
+  int i = 0;
+  while (1) {
+    //if (str.size()%(PAGE_SIZE/32)) is_read_more_data = false;
+    ser.data = "";
+    if (i == buffer_size) {
+      if ((buffer_size = fread(read_buffer, 1, PAGE_SIZE, input)) == 0) break;
+      i = 0;
+    }
     if (count <= 0) break;
     is_find_key_in_this_one = false;
     found_num = 0;
-    int i = 0;
-    while (1) {
-      if (str[i] != ' ') {
-        str1 += str[i++];
-      } else {
-        break;
+    //get ser count (attributes number)
+
+    for (int j = 0; j < 4; j++) {
+      if (i >= buffer_size) {
+        buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
+        i = 0;
       }
+      /*cout << "buffer_size : " << buffer_size << endl;
+      cout << read_buffer[i] << endl << "here\n";
+      cout << int_.b[j] << endl;
+      cout << "sizeof read_buffer[i] : " << sizeof(read_buffer[i]) << endl;
+      cout << "sizeof int_.b[j] : " << sizeof(int_.b[j]) << endl;*/
+      int_.b[j] = read_buffer[i++];
     }
-    ser.count = strtonum(str1);
-    i++;
-    for (int j = 0; j < ser.count; j++) {
-      while (1) {
-        if (str[i] != ' ') {
-          str1 += str[i++];
-        } else {
-          break;
+    ser.count = int_.a;
+    //get ser aid
+    for (int j_ = 0; j_ < ser.count; j_++) {
+      for (int j = 0; j < 4; j++) {
+        if (i >= buffer_size) {
+          buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
+          i = 0;
         }
+        int_.b[j] = read_buffer[i++];
       }
-      ser.aid[j] = strtonum(str1);
-      i++;
+      ser.aid[j_] = int_.a;
     }
+    //judge whether the keyA is in this json
     for (int j = 0; j < ser.count; j++) {
       if (aid == ser.aid[j]) {
         is_find_key_in_this_one = true;
@@ -288,47 +321,78 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       }
     }
     if (is_find_key_in_this_one) {
-      for (int j = 0; j < ser.count; j++) {
-        while (1) {
-          if (str[i] != ' ') {
-            str1 += str[i++];
-          } else {
-            break;
+      for (int j_ = 0; j_ < ser.count; j_++) {
+        for (int j = 0; j < 4; j++) {
+          if (i >= buffer_size) {
+            buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
+            i = 0;
           }
+          int_.b[j] = read_buffer[i++];
         }
-        ser.offset[j] = strtonum(str1);
-        i++;
+        ser.offset[j_] = int_.a;
       }
-      while (1) {
-        if (str[i] != ' ') {
-          str1 += str[i++];
-        } else {
-          break;
+      //get ser sum (the length of data)
+      for (int j = 0; j < 4; j++) {
+        if (i >= buffer_size) {
+          buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
+          i = 0;
         }
+        int_.b[j] = read_buffer[i++];
       }
+      ser.sum = int_.a;
+      //get ser len
       for (int j = 0; j <= ser.count; j++) {
         ser.len[j] = ser.offset[j + 1] - ser.offset[j];
       }
-      ser.sum = strtonum(str1);
-      i++;
-      for (unsigned int j = i; j < str.length(); j++) {
-        ser.data += str[j];
+      //get ser data
+      while (ser.data.length() < ser.sum) {
+        if (i >= buffer_size) {
+          buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
+          i = 0;
+        }
+        ser.data += read_buffer[i++];
       }
+      //judge whethe the valueB and the found_value from this json is equals
       for (int j = 0; j < found_num; j++) {
-        string check_value = ser.data.substr(ser.offset[found_id_[j]], ser.len[found_id_[j]]);
-        if (value == check_value) {
+        string found_value = ser.data.substr(ser.offset[found_id_[j]], ser.len[found_id_[j]]);
+        if (value_ == found_value) {
           cout << sertojson(ser, catalog) << endl;
           is_find = true;
           break;
         }
       }
+    } else {
+      i += 4 * ser.count;
+      if (i >= buffer_size) {
+        buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
+        i -= PAGE_SIZE;
+      }
+
+      for (int j = 0; j < 4; j++) {
+        if (i >= buffer_size) {
+          buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
+          i = 0;
+        }
+        int_.b[j] = read_buffer[i++];
+      }
+      ser.sum = int_.a;
+      i += ser.sum;
+      if (i >= buffer_size) {
+        if ((buffer_size = fread(read_buffer, 1, PAGE_SIZE, input)) == 0) {
+          break;
+        }
+        i -= PAGE_SIZE;
+      }
     }
   }
+
   if (!is_find) {
     cout << "NONE\n";
   }
-  input.close();
+  fclose(input);
+  input = NULL;
 }
+
 catalog read_catalog() {
   struct catalog c;
   string str = "";
