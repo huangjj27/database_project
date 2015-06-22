@@ -35,7 +35,7 @@ struct serial {
 
 int strtonum(string s);
 
-void get_bin();
+void get_bin(string file_name);
 
 string sertojson(serial ser, catalog* scanlog1);
 
