@@ -42,7 +42,7 @@ void midorder(Node* &root, ofstream &outfile) {
     id++;
     root->key_id = id;
     outfile << root->key_id << '\t' << root->key << '\t'
-            << root->type << '\t' << root->count << endl;
+      << root->type << '\t' << root->count << endl;
     midorder(root->right, outfile);
   }
 }

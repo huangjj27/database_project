@@ -6,11 +6,11 @@
 using namespace std;
 
 void InsertByFilename() {
-    string str;
-    cout << "please input the data file name: ";
-    cin >> str;
-    BuildCatalogFile(str);
-    cout << "catalog built!" << endl;
+  string str;
+  cout << "please input the data file name: ";
+  cin >> str;
+  BuildCatalogFile(str);
+  cout << "catalog built!" << endl;
 }
 
 void CheckCatalog() {
@@ -28,21 +28,20 @@ void MatchKeyAWithValueB(string key, string value) {
   find_A_equals_B(key, value, &c);
 }
 int main(void) {
-    std::string operation;
-    std::string key, value;
-    cout << "please input \"insert\"" << endl;
-    cin >> operation;
+  std::string operation;
+  std::string key, value;
+  cout << "please input \"insert\"" << endl;
+  cin >> operation;
+  if (operation == "insert") InsertByFilename();
+  cout << "please give the command(insert check find)" << endl;
+  while (std::cin >> operation) {
     if (operation == "insert") InsertByFilename();
-    cout << "please give the command(insert check find)" << endl;
-    while (std::cin >> operation) {
-        if (operation == "insert") InsertByFilename();
-        else if (operation == "check") CheckCatalog();
-        else if (operation == "find") {
-    cout << "please input A and B"<<endl;
-    cin >> key >> value;
-    MatchKeyAWithValueB(key, value);
+    else if (operation == "check") CheckCatalog();
+    else if (operation == "find") {
+      cout << "please input A and B" << endl;
+      cin >> key >> value;
+      MatchKeyAWithValueB(key, value);
+    } else return 0;
   }
-        else return 0;
-    }
-    return 0;
+  return 0;
 }

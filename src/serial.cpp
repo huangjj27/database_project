@@ -12,7 +12,7 @@ union intandchar {
 int strtonum(string s) {
   int num;
   stringstream ss(s);
-  ss>>num;
+  ss >> num;
   return num;
 }
 
@@ -40,10 +40,10 @@ void get_bin() {
   FILE* out = fopen("create.data", "wb+");
   string tmp = "";
 
-  freopen("data2.json","r",stdin);
+  freopen("data2.json", "r", stdin);
   //getline(cin,str);             // block the table header.
   //ofstream out("create.data");
-  while(getline(cin,str)) {
+  while (getline(cin, str)) {
     if (str == "[") continue;     // sign of file beginning
     if (str == "]") break;        // sign of file end
     int sum = 0;
@@ -56,16 +56,16 @@ void get_bin() {
 
     int i = 2;          // ignoer '{' and '\“' at the line beginning
     int len = str.size();
-    while(i < len - 1) {
+    while (i < len - 1) {
       int l = 0;        // offset of key_name
-      while(str[i] != '"') {
+      while (str[i] != '"') {
         str1 += str[i];
         i++;
       }
       i += 3;                   // ignore the string "\": "
       if (str[i] == '{') {      // offset of key_type
         str2 = "json";
-        while(str[i] != '}') {
+        while (str[i] != '}') {
           str3[count] += str[i];
           i++;
           l++;
@@ -74,7 +74,7 @@ void get_bin() {
         l++;
       } else if (str[i] == '[') {
         str2 = "array";
-        while(str[i] != ']') {
+        while (str[i] != ']') {
           str3[count] += str[i];
           i++;
           l++;
@@ -84,24 +84,24 @@ void get_bin() {
       } else if (str[i] == '"') {
         str2 = "text";
         i++;
-        while(str[i] != '"') {
+        while (str[i] != '"') {
           str3[count] += str[i];
           i++;
           l++;
         }
       } else if (str[i] == 'f' || str[i] == 't') {
         str2 = "bool";
-        while(str[i] != ',' && str[i] != '}') {
+        while (str[i] != ',' && str[i] != '}') {
           str3[count] += str[i];
           i++;
           l++;
         }
-         //if (str3[count] == "true")str3[count] = "t";
-         //else str3[count] = "f";
+        //if (str3[count] == "true")str3[count] = "t";
+        //else str3[count] = "f";
       } else {
         str2 = "int";
         string t = "";
-        while(str[i] != ',' && str[i] != '}') {
+        while (str[i] != ',' && str[i] != '}') {
           t += str[i];
           //str3[count] += str[i];
           i++;
@@ -115,12 +115,12 @@ void get_bin() {
         // output to check if the data is not match
         cout << t << int_.a << endl;
       }
-      while(str[i] != ',' && i < len - 1) i++;
+      while (str[i] != ',' && i < len - 1) i++;
       if (i != len - 1) i += 3;
       off[count] = l;
       for (int j = 0; j < c.num; j++) {
-        if(str1 == c.key_name[j] && str2 == c.key_type[j]) {
-          aid[count] = j+1;
+        if (str1 == c.key_name[j] && str2 == c.key_type[j]) {
+          aid[count] = j + 1;
           break;
         }
       }
@@ -134,29 +134,29 @@ void get_bin() {
     //out << count << ' ';
     char* a, b[4];
     a = (char*)&count;
-    b[0]=*((char *)a+0);
-        b[1]=*((char *)a+1);
-        b[2]=*((char *)a+2);
-        b[3]=*((char *)a+3);
+    b[0] = *((char *)a + 0);
+    b[1] = *((char *)a + 1);
+    b[2] = *((char *)a + 2);
+    b[3] = *((char *)a + 3);
     tmp += b[0] + b[1] + b[2] + b[3];
     //tmp += ' ';
     for (int j = 0; j < count; j++) {
       //out << aid[j] << ' ';
       a = (char*)&(aid[j]);
-      b[0]=*((char *)a+0);
-      b[1]=*((char *)a+1);
-      b[2]=*((char *)a+2);
-      b[3]=*((char *)a+3);
+      b[0] = *((char *)a + 0);
+      b[1] = *((char *)a + 1);
+      b[2] = *((char *)a + 2);
+      b[3] = *((char *)a + 3);
       tmp += b[0] + b[1] + b[2] + b[3];
       //tmp += ' ';
     }
     for (int j = 0; j < count; j++) {
       //out << ss << ' ';
       a = (char*)&ss;
-      b[0]=*((char *)a+0);
-      b[1]=*((char *)a+1);
-      b[2]=*((char *)a+2);
-      b[3]=*((char *)a+3);
+      b[0] = *((char *)a + 0);
+      b[1] = *((char *)a + 1);
+      b[2] = *((char *)a + 2);
+      b[3] = *((char *)a + 3);
       tmp += b[0] + b[1] + b[2] + b[3];
       //tmp += ' ';
       ss += off[j];
@@ -164,10 +164,10 @@ void get_bin() {
     }
     //out << sum << ' ';
     a = (char*)&sum;
-    b[0]=*((char *)a+0);
-    b[1]=*((char *)a+1);
-    b[2]=*((char *)a+2);
-    b[3]=*((char *)a+3);
+    b[0] = *((char *)a + 0);
+    b[1] = *((char *)a + 1);
+    b[2] = *((char *)a + 2);
+    b[3] = *((char *)a + 3);
     tmp += b[0] + b[1] + b[2] + b[3];
     //tmp += ' ';
     for (int j = 0; j < count; j++) {
@@ -179,9 +179,9 @@ void get_bin() {
     //out << endl;
     tmp += "\n";
 
-    if (tmp.size()/PAGE_SIZE) {
+    if (tmp.size() / PAGE_SIZE) {
       fwrite(tmp.substr(0, PAGE_SIZE).data(), PAGE_SIZE, 1, out);
-      tmp = tmp.substr(PAGE_SIZE, tmp.size()%PAGE_SIZE);
+      tmp = tmp.substr(PAGE_SIZE, tmp.size() % PAGE_SIZE);
     }
   }
   fwrite(tmp.data(), 1, tmp.length(), out);
@@ -200,55 +200,55 @@ void get_bin() {
 
 
 string sertojson(serial ser, catalog* scanlog1) {
-  string ans = "", flag[5] = {"json", "array", "text", "int", "bool"};
-    ans += "{";
+  string ans = "", flag[5] = { "json", "array", "text", "int", "bool" };
+  ans += "{";
 
-      for (int i = 0; i < ser.count; i++) {
-        catalog* scanlog = scanlog1;
-        int id = ser.aid[i];
+  for (int i = 0; i < ser.count; i++) {
+    catalog* scanlog = scanlog1;
+    int id = ser.aid[i];
 
-        ans += "\"";
-        ans += scanlog->key_name[id-1];
-        ans += "\"";
-        ans += ": ";
-      if ((scanlog->key_type[id-1]) == flag[0]) {
-        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-          ans += ser.data[j];
-        }
+    ans += "\"";
+    ans += scanlog->key_name[id - 1];
+    ans += "\"";
+    ans += ": ";
+    if ((scanlog->key_type[id - 1]) == flag[0]) {
+      for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+        ans += ser.data[j];
       }
-      if ((scanlog->key_type[id-1]) == flag[1]) {
-        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-          ans += ser.data[j];
-        }
+    }
+    if ((scanlog->key_type[id - 1]) == flag[1]) {
+      for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+        ans += ser.data[j];
       }
+    }
 
-      if ((scanlog->key_type[id-1]) == flag[2]) {
-        ans += "\"";
-        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-          ans += ser.data[j];
-        }
-        ans += "\"";
+    if ((scanlog->key_type[id - 1]) == flag[2]) {
+      ans += "\"";
+      for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+        ans += ser.data[j];
       }
+      ans += "\"";
+    }
 
-      if ((scanlog->key_type[id-1]) == flag[3]) {
-        intandchar int_;
-        int j_ = 0;
-        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-          //ans += ser.data[j];
-          int_.b[j_] = ser.data[j];
-          //ans += numtostr(tmp);
-        }
-        ans += numtostr(int_.a);
+    if ((scanlog->key_type[id - 1]) == flag[3]) {
+      intandchar int_;
+      int j_ = 0;
+      for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+        //ans += ser.data[j];
+        int_.b[j_] = ser.data[j];
+        //ans += numtostr(tmp);
       }
-      if ((scanlog->key_type[id-1]) == flag[4]) {
-        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-          ans += ser.data[j];  // bool, true of false, add to ans as a string
-        }
+      ans += numtostr(int_.a);
+    }
+    if ((scanlog->key_type[id - 1]) == flag[4]) {
+      for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+        ans += ser.data[j];  // bool, true of false, add to ans as a string
       }
-          if (i != ser.count - 1) ans += ", ";
-      }
-    ans += "}";
-    return ans;
+    }
+    if (i != ser.count - 1) ans += ", ";
+  }
+  ans += "}";
+  return ans;
 }
 
 void find_A_equals_B(string key, string value, catalog* catalog) {
@@ -259,7 +259,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
 
   intandchar int_;
   string value_ = "";
-    string type = "", flag[5] = {"json", "array", "text", "int", "bool"};
+  string type = "", flag[5] = { "json", "array", "text", "int", "bool" };
   if (value[0] == '[' && value[value.size() - 1] == ']') type = flag[1];
   else if (value[0] == '{' && value[value.size() - 1] == '}') type = flag[0];
   else if (value == "true" || value == "false") type = flag[4];
@@ -281,11 +281,11 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
 
   int aid;
   for (int j = 1; j <= catalog->num; j++) {
-    if (key == catalog->key_name[j-1] && type == catalog->key_type[j-1]) {
-            aid = j;
-            break;
-        }
+    if (key == catalog->key_name[j - 1] && type == catalog->key_type[j - 1]) {
+      aid = j;
+      break;
     }
+  }
   if (aid == 0) {
     cout << "NONE\n";
     return;
@@ -301,15 +301,15 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
   }
 
 
-  int count = catalog->count[aid-1];
+  int count = catalog->count[aid - 1];
 
   bool is_find_key_in_this_one;
 
   serial ser;
-  int found_id_[50] = {0};
+  int found_id_[50] = { 0 };
   int found_num = 0;
   int i = 0;
-  while(1) {
+  while (1) {
     //if (str.size()%(PAGE_SIZE/32)) is_read_more_data = false;
     if (i == str.size()) {
       if (fread(read_buffer, PAGE_SIZE, 1, input) == 0) break;
@@ -323,11 +323,11 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
 
     for (int j = 0; j < 4; j++) {
       if (i >= str.size()) {
-          fread(read_buffer, PAGE_SIZE, 1, input);
-          str = "";
-          str += read_buffer;
-          i = 0;
-        }
+        fread(read_buffer, PAGE_SIZE, 1, input);
+        str = "";
+        str += read_buffer;
+        i = 0;
+      }
       int_.b[j] = str[i++];
     }
     ser.count = int_.a;
@@ -335,15 +335,15 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     //get ser aid
     for (int j_ = 0; j_ < ser.count; j_++) {
       for (int j = 0; j < 4; j++) {
-          if (i >= str.size()) {
-              fread(read_buffer, PAGE_SIZE, 1, input);
-              str = "";
-              str += read_buffer;
-              i = 0;
-            }
-          int_.b[j] = str[i++];
+        if (i >= str.size()) {
+          fread(read_buffer, PAGE_SIZE, 1, input);
+          str = "";
+          str += read_buffer;
+          i = 0;
         }
-        ser.aid[j_]= int_.a;
+        int_.b[j] = str[i++];
+      }
+      ser.aid[j_] = int_.a;
     }
     cout << "get ser aid\n";
     //judge whether the keyA is in this json
@@ -357,42 +357,42 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     cout << "judge whether the keyA is in this json\n" << count << "\n";
     if (is_find_key_in_this_one) {
       for (int j_ = 0; j_ < ser.count; j_++) {
-          for (int j = 0; j < 4; j++) {
-              if (i >= str.size()) {
-                fread(read_buffer, PAGE_SIZE, 1, input);
-                str = "";
-                str += read_buffer;
-                i = 0;
-              }
+        for (int j = 0; j < 4; j++) {
+          if (i >= str.size()) {
+            fread(read_buffer, PAGE_SIZE, 1, input);
+            str = "";
+            str += read_buffer;
+            i = 0;
+          }
           int_.b[j] = str[i++];
-            }
-        ser.offset[j_] = int_.a;
         }
+        ser.offset[j_] = int_.a;
+      }
       // get ser sum (the length of data)
       for (int j = 0; j < 4; j++) {
-          if (i >= str.size()) {
-              fread(read_buffer, PAGE_SIZE, 1, input);
-              str = "";
-              str += read_buffer;
-              i = 0;
-            }
-          int_.b[j] = str[i++];
+        if (i >= str.size()) {
+          fread(read_buffer, PAGE_SIZE, 1, input);
+          str = "";
+          str += read_buffer;
+          i = 0;
         }
-        ser.sum = int_.a;
+        int_.b[j] = str[i++];
+      }
+      ser.sum = int_.a;
       cout << "get ser sum (the length of data)\n";
       // get ser len
       for (int j = 0; j <= ser.count; j++) {
-        ser.len[j] = ser.offset[j+1]-ser.offset[j];
+        ser.len[j] = ser.offset[j + 1] - ser.offset[j];
       }
       cout << "get ser len\n";
       // get ser data
       while (ser.data.length() < ser.sum) {
         if (i >= str.size()) {
-              fread(read_buffer, PAGE_SIZE, 1, input);
-              str = "";
-              str += read_buffer;
-              i = 0;
-            }
+          fread(read_buffer, PAGE_SIZE, 1, input);
+          str = "";
+          str += read_buffer;
+          i = 0;
+        }
         ser.data += str[i++];
       }
       cout << "get ser data\n";
@@ -407,33 +407,33 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       }
       cout << "judge whethe the valueB and the found_value from this json is equals\n";
     } else {
-      i += 4*ser.count;
+      i += 4 * ser.count;
       if (i >= str.size()) {
+        fread(read_buffer, PAGE_SIZE, 1, input);
+        str = "";
+        str += read_buffer;
+        i -= PAGE_SIZE;
+      }
+
+      for (int j = 0; j < 4; j++) {
+        if (i >= str.size()) {
           fread(read_buffer, PAGE_SIZE, 1, input);
           str = "";
           str += read_buffer;
-          i -= PAGE_SIZE;
+          i = 0;
         }
-
-      for (int j = 0; j < 4; j++) {
-          if (i >= str.size()) {
-              fread(read_buffer, PAGE_SIZE, 1, input);
-              str = "";
-              str += read_buffer;
-              i = 0;
-            }
-          int_.b[j] = str[i++];
-        }
-        ser.sum = int_.a;
+        int_.b[j] = str[i++];
+      }
+      ser.sum = int_.a;
       i += ser.sum;
       if (i >= str.size()) {
-          if (fread(read_buffer, PAGE_SIZE, 1, input)) {
+        if (fread(read_buffer, PAGE_SIZE, 1, input)) {
           break;
         }
-          str = "";
-          str += read_buffer;
-          i -= PAGE_SIZE;
-        }
+        str = "";
+        str += read_buffer;
+        i -= PAGE_SIZE;
+      }
     }
   }
 
@@ -454,20 +454,20 @@ catalog read_catalog() {
   string data = "";
   ifstream input;
   input.open("catalog.data");
-  while(getline(input,str)) {
+  while (getline(input, str)) {
     int i = 0;
-    while(str[i] != ' ') i++;
+    while (str[i] != ' ') i++;
     i++;
-    while(str[i] != ' ') {
+    while (str[i] != ' ') {
       str1 += str[i];
       i++;
     }
     i++;
-    while(str[i] != ' ') {
+    while (str[i] != ' ') {
       str2 += str[i];
       i++;
     }
-    while(str[i] != ' ') {
+    while (str[i] != ' ') {
       str4 += str[i];
       i++;
     }
