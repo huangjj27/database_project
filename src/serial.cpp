@@ -39,8 +39,6 @@ void get_bin() {
   c = read_catalog();
 
   freopen("data2.json", "r", stdin);
-  //getline(cin,str);             // block the table header.
-  //ofstream out("create.data");
   FILE* out = fopen("create.data", "wb+");
   string tmp = "";
   while (getline(cin, str)) {
@@ -96,7 +94,6 @@ void get_bin() {
           i++;
           l++;
         }
-
       } else {
         str2 = "int";
         while (str[i] != ',' && str[i] != '}') {
@@ -130,6 +127,7 @@ void get_bin() {
     tmp += int_.b[3];
     for (int j = 0; j < count; j++) {
       int_.a = aid[j];
+
       tmp += int_.b[0];
       tmp += int_.b[1];
       tmp += int_.b[2];
@@ -211,8 +209,7 @@ string sertojson(serial ser, catalog* scanlog1) {
     }
     if ((scanlog->key_type[id]) == flag[4]) {
       for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-        if (ser.data[j] == 't') ans += "true";
-        if (ser.data[j] == 'f') ans += "false";
+        ans += ser.data[j];  // bool, true of false, add to ans as a string
       }
     }
 
@@ -294,15 +291,10 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
         i = 0;
       }
-      /*cout << "buffer_size : " << buffer_size << endl;
-      cout << read_buffer[i] << endl << "here\n";
-      cout << int_.b[j] << endl;
-      cout << "sizeof read_buffer[i] : " << sizeof(read_buffer[i]) << endl;
-      cout << "sizeof int_.b[j] : " << sizeof(int_.b[j]) << endl;*/
       int_.b[j] = read_buffer[i++];
     }
     ser.count = int_.a;
-    //get ser aid
+    // get ser aid
     for (int j_ = 0; j_ < ser.count; j_++) {
       for (int j = 0; j < 4; j++) {
         if (i >= buffer_size) {
@@ -313,7 +305,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       }
       ser.aid[j_] = int_.a;
     }
-    //judge whether the keyA is in this json
+    // judge whether the keyA is in this json
     for (int j = 0; j < ser.count; j++) {
       if (aid == ser.aid[j]) {
         is_find_key_in_this_one = true;
@@ -332,7 +324,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         }
         ser.offset[j_] = int_.a;
       }
-      //get ser sum (the length of data)
+      // get ser sum (the length of data)
       for (int j = 0; j < 4; j++) {
         if (i >= buffer_size) {
           buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
@@ -341,11 +333,11 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         int_.b[j] = read_buffer[i++];
       }
       ser.sum = int_.a;
-      //get ser len
+      // get ser len
       for (int j = 0; j <= ser.count; j++) {
         ser.len[j] = ser.offset[j + 1] - ser.offset[j];
       }
-      //get ser data
+      // get ser data
       while (ser.data.length() < ser.sum) {
         if (i >= buffer_size) {
           buffer_size = fread(read_buffer, 1, PAGE_SIZE, input);
@@ -353,7 +345,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         }
         ser.data += read_buffer[i++];
       }
-      //judge whethe the valueB and the found_value from this json is equals
+      // judge whethe the valueB and the found_value from this json is equals
       for (int j = 0; j < found_num; j++) {
         string found_value = ser.data.substr(ser.offset[found_id_[j]], ser.len[found_id_[j]]);
         if (value_ == found_value) {
