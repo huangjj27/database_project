@@ -485,15 +485,14 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       }
       cout << "judge whethe the valueB and the found_value from this json is equals\n";
     } else {
-      for (int j = 0; j < 4*ser.count; j++) {
-        if (i >= str.size()) {
-              fread(read_buffer, 1, PAGE_SIZE/8, input);
-              str = "";
-              str += read_buffer;
-              i = 0;
-            }
-        i++;
-      }
+      i += 4*ser.count;
+      if (i >= str.size()) {
+          fread(read_buffer, 1, PAGE_SIZE/8, input);
+          str = "";
+          str += read_buffer;
+          i -= PAGE_SIZE/8;
+        }
+
       for (int j = 0; j < 4; j++) {
           if (i >= str.size()) {
               fread(read_buffer, 1, PAGE_SIZE/8, input);
@@ -504,15 +503,13 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
           int_.b[j] = str[i++];
         }
         ser.sum = int_.a;
-      for (int j = 0; j < ser.sum; j++) {
-        if (i >= str.size()) {
-              fread(read_buffer, 1, PAGE_SIZE/8, input);
-              str = "";
-              str += read_buffer;
-              i = 0;
-            }
-        i++;
-      }
+      i += ser.sum;
+      if (i >= str.size()) {
+          fread(read_buffer, 1, PAGE_SIZE/8, input);
+          str = "";
+          str += read_buffer;
+          i -= PAGE_SIZE/8;
+        }
     }
   }
   }
