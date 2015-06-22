@@ -152,7 +152,8 @@ void get_bin() {
     for (int j = 0; j < count; j++) {
       tmp += str3[j];
     }
-    tmp += "\n";
+    // when we write binary data, we don't need to seperate different record.
+    // tmp += "\n";
 
     if (tmp.size() / PAGE_SIZE) {
       fwrite(tmp.substr(0, PAGE_SIZE).data(), PAGE_SIZE, 1, out);
