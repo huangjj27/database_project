@@ -32,16 +32,16 @@ int main(void) {
     std::string key, value;
     cout << "please input \"insert\"" << endl;
     cin >> operation;
-    if (operation == "insert") InsertByFilename(); 
+    if (operation == "insert") InsertByFilename();
     cout << "please give the command(insert check find)" << endl;
     while (std::cin >> operation) {
         if (operation == "insert") InsertByFilename();
         else if (operation == "check") CheckCatalog();
         else if (operation == "find") {
-		cout << "please input A and B"<<endl;
-		cin >> key >> value;
-		MatchKeyAWithValueB(key, value);
-	}
+    cout << "please input A and B"<<endl;
+    cin >> key >> value;
+    MatchKeyAWithValueB(key, value);
+  }
         else return 0;
     }
     return 0;
