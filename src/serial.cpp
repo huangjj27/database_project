@@ -174,9 +174,9 @@ void get_bin() {
     //out << endl;
     tmp += "\n";
 
-    if (tmp.size()/(PAGE_SIZE/8)) {
-      fwrite(tmp.substr(0, (PAGE_SIZE/8)).data(), 1, PAGE_SIZE/8, out);
-      tmp = tmp.substr((PAGE_SIZE/8), tmp.size()%(PAGE_SIZE/8));
+    if (tmp.size()/PAGE_SIZE) {
+      fwrite(tmp.substr(0, PAGE_SIZE).data(), PAGE_SIZE, 1, out);
+      tmp = tmp.substr(PAGE_SIZE, tmp.size()%PAGE_SIZE);
     }
   }
   fwrite(tmp.data(), 1, tmp.length(), out);
@@ -247,86 +247,6 @@ string sertojson(serial ser, catalog* scanlog1) {
     return ans;
 }
 
-serial jsontoser(string json, catalog* scanlog1) {
-  int i = 2;
-
-  serial ser;
-  string str[50];
-    string data = "";
-
-  string key_name = "", key_type = "", flag[5] = {"json", "array", "text", "int", "bool"};
-  str[0] = "";
-  ser.count = 0;
-
-  while(i < json.size()) {
-    while (json[i] != '"') {
-      key_name += json[i++];
-    }
-
-    i += 2;
-    if (json[i] == '"') {
-      i++;
-      while (json[i] != '"') str[ser.count] += json[i++];
-      key_type = flag[2];
-    } else if (json[i] == '[') {
-      while (json[i] != ']') str[ser.count] += json[i++];
-      str[ser.count] += ']';
-      key_type = flag[1];
-    } else if (json[i] == '{') {
-      while (json[i] != '}') str[ser.count] += json[i++];
-      str[ser.count] += '}';
-      key_type = flag[0];
-    } else if (json[i] == 't' || json[i] == 'f') {
-      while (json[i] != ',' && json[i] != '}') str[ser.count] += json[i++];
-      key_type = flag[4];
-    } else {
-      string tmp = "";
-      while (json[i] != ',') {
-        tmp += json[i++];
-      }
-      str[ser.count] += (char)strtonum(tmp);
-      key_type = flag[3];
-    }
-
-    for (int j = 0; j < scanlog1->num; j++) {
-      if (key_name == scanlog1->key_name[j] && key_type == scanlog1->key_type[j]) {
-        ser.aid[ser.count] = j + 1;
-      }
-    }
-    ser.count++;
-    str[ser.count] = "";
-    key_name = "";
-    key_type = "";
-
-    while (json[i] != '"') {
-      i++;
-      if (i >= json.size()) break;
-    }
-  }
-
-  for (int j = 1; j < ser.count; j++) {
-    for (int k = 0; k < ser.count - j; k++) {
-      if (ser.aid[k] > ser.aid[k + 1]) {
-        int tmp = ser.aid[k];
-        ser.aid[k] = ser.aid[k+1];
-        ser.aid[k+1] = tmp;
-        string temp = str[k];
-        str[k] = str[k+1];
-        str[k+1] = temp;
-      }
-    }
-  }
-
-  for (int j = 0; j < ser.count; j++) {
-    ser.offset[j] = ser.data.size();
-    ser.data += str[j];
-    ser.len[j] = ser.data.size() - ser.offset[j];
-  }
-  ser.sum = ser.data.size();
-
-  return ser;
-}
-
 void find_A_equals_B(string key, string value, catalog* catalog) {
 
   if (catalog->num == 0) {
@@ -369,7 +289,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
   }
 
   bool is_find = false;
-  char* read_buffer;
+  char read_buffer[PAGE_SIZE];
   string str = "", str1 = "";
   FILE* input = fopen("create.data", "rb+");
   if (input == NULL) {
@@ -389,8 +309,8 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
   int i = 0;
   while(1) {
     //if (str.size()%(PAGE_SIZE/32)) is_read_more_data = false;
-    if (str.size() == 0) {
-      if (fread(read_buffer, 1, PAGE_SIZE/8, input) == 0) break;
+    if (i == str.size()) {
+      if (fread(read_buffer, PAGE_SIZE, 1, input) == 0) break;
       str += read_buffer;
       i = 0;
     }
@@ -401,7 +321,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
 
     for (int j = 0; j < 4; j++) {
       if (i >= str.size()) {
-          fread(read_buffer, 1, PAGE_SIZE/8, input);
+          fread(read_buffer, PAGE_SIZE, 1, input);
           str = "";
           str += read_buffer;
           i = 0;
@@ -414,7 +334,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     for (int j_ = 0; j_ < ser.count; j_++) {
       for (int j = 0; j < 4; j++) {
           if (i >= str.size()) {
-              fread(read_buffer, 1, PAGE_SIZE/8, input);
+              fread(read_buffer, PAGE_SIZE, 1, input);
               str = "";
               str += read_buffer;
               i = 0;
@@ -437,7 +357,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       for (int j_ = 0; j_ < ser.count; j_++) {
           for (int j = 0; j < 4; j++) {
               if (i >= str.size()) {
-                fread(read_buffer, 1, PAGE_SIZE/8, input);
+                fread(read_buffer, PAGE_SIZE, 1, input);
                 str = "";
                 str += read_buffer;
                 i = 0;
@@ -449,7 +369,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       //get ser sum (the length of data)
       for (int j = 0; j < 4; j++) {
           if (i >= str.size()) {
-              fread(read_buffer, 1, PAGE_SIZE/8, input);
+              fread(read_buffer, PAGE_SIZE, 1, input);
               str = "";
               str += read_buffer;
               i = 0;
@@ -466,7 +386,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
       //get ser data
       while (ser.data.length() < ser.sum) {
         if (i >= str.size()) {
-              fread(read_buffer, 1, PAGE_SIZE/8, input);
+              fread(read_buffer, PAGE_SIZE, 1, input);
               str = "";
               str += read_buffer;
               i = 0;
@@ -487,15 +407,15 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
     } else {
       i += 4*ser.count;
       if (i >= str.size()) {
-          fread(read_buffer, 1, PAGE_SIZE/8, input);
+          fread(read_buffer, PAGE_SIZE, 1, input);
           str = "";
           str += read_buffer;
-          i -= PAGE_SIZE/8;
+          i -= PAGE_SIZE;
         }
 
       for (int j = 0; j < 4; j++) {
           if (i >= str.size()) {
-              fread(read_buffer, 1, PAGE_SIZE/8, input);
+              fread(read_buffer, PAGE_SIZE, 1, input);
               str = "";
               str += read_buffer;
               i = 0;
@@ -505,12 +425,12 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         ser.sum = int_.a;
       i += ser.sum;
       if (i >= str.size()) {
-          if (fread(read_buffer, 1, PAGE_SIZE/8, input)) {
+          if (fread(read_buffer, PAGE_SIZE, 1, input)) {
           break;
         }
           str = "";
           str += read_buffer;
-          i -= PAGE_SIZE/8;
+          i -= PAGE_SIZE;
         }
     }
   }
