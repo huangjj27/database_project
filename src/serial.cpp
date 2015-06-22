@@ -26,7 +26,7 @@ string numtostr(int n) {
   return str;
 }
 
-void get_bin() {
+void get_bin(string file_name) {
   struct catalog c;
   string str = "";
   string str1 = "";
@@ -34,14 +34,18 @@ void get_bin() {
   string str3 = "";
   string strf = "";
   c.num = 0;
+
+  ifstream infile;
+  infile.open(file_name, ios::in);
+
   string data = "";
 
   c = read_catalog();
-
-  freopen("data2.json", "r", stdin);
+  //freopen(file_name, "r", stdin);
+  //freopen("data2.json", "r", stdin);
   FILE* out = fopen("create.data", "wb+");
   string tmp = "";
-  while (getline(cin, str)) {
+  while (getline(infile, str)) {
     if (str == "[") continue;     // sign of file beginning
     if (str == "]") break;        // sign of file end
     int sum = 0;
@@ -161,7 +165,8 @@ void get_bin() {
 
   fclose(out);
   out = NULL;
-  fclose(stdin);
+  infile.close();
+  //fclose(stdin);
 }
 
 
@@ -425,4 +430,3 @@ catalog read_catalog() {
   input.close();
   return c;
 }
-
