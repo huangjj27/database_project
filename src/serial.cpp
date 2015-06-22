@@ -2,7 +2,7 @@
 #define PAGE_SIZE 8192
 int strtonum(string s);
 string numtostr(int n);
-// 试一下能不能输入中文
+
 union intandchar
 {
   int a;
@@ -39,11 +39,11 @@ void get_bin() {
   FILE* out = fopen("create.data", "wb+");
   string tmp = "";
   freopen("data2.json","r",stdin);
-  //getline(cin,str);
+  //getline(cin,str);             // block the table header.
   //ofstream out("create.data");
   while(getline(cin,str)) {
-    if (str == "[") continue;     //文件开头标志
-    if (str == "]") break;        //文件结束标志
+    if (str == "[") continue;     // 文件开头标志
+    if (str == "]") break;        // 文件结束标志
     int sum = 0;
     int count = 0;
     int aid[50];
@@ -52,16 +52,16 @@ void get_bin() {
 
     str3[0] = "";
 
-    int i = 2;          //忽略开头的{“
+    int i = 2;          // 忽略开头的{“
     int len = str.size();
     while(i < len - 1) {
-      int l = 0;        //key_name的偏移亮
+      int l = 0;        // key_name的偏移量
       while(str[i] != '"') {
         str1 += str[i];
         i++;
       }
-      i += 3;         //忽略”：和空格
-      if (str[i] == '{') {      //key_type的偏移量
+      i += 3;                   // 忽略”：和空格
+      if (str[i] == '{') {      // key_type的偏移量
         str2 = "json";
         while(str[i] != '}') {
           str3[count] += str[i];
@@ -105,10 +105,13 @@ void get_bin() {
           i++;
           //l++;
         }
+
         l += 4;
         intandchar int_;
         int_.a = strtonum(t);
         str3[count] += int_.b[0] + int_.b[1] + int_.b[2] + int_.b[3];
+        // output to check if the data is not match
+        cout << t << int_.a << endl;
       }
       while(str[i] != ',' && i < len - 1) i++;
       if (i != len - 1) i += 3;
@@ -282,7 +285,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
             break;
         }
     }
-  if (id_num == 0) {
+  if (aid == 0) {
     cout << "NONE\n";
     return;
   }
@@ -432,7 +435,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
         }
     }
   }
-  
+
   if (!is_find) {
     cout << "NONE\n";
   }
