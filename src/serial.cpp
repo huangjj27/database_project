@@ -36,13 +36,11 @@ void get_bin() {
 
   c = read_catalog();
 
-  // create a file of serialized binary data
-  FILE* out = fopen("create.data", "wb+");
-  string tmp = "";
-
   freopen("data2.json", "r", stdin);
   //getline(cin,str);             // block the table header.
   //ofstream out("create.data");
+  FILE* out = fopen("create.data", "wb+");
+  string tmp = "";
   while (getline(cin, str)) {
     if (str == "[") continue;     // sign of file beginning
     if (str == "]") break;        // sign of file end
@@ -100,20 +98,11 @@ void get_bin() {
         //else str3[count] = "f";
       } else {
         str2 = "int";
-        string t = "";
         while (str[i] != ',' && str[i] != '}') {
-          t += str[i];
-          //str3[count] += str[i];
+          str3[count] += str[i];
           i++;
-          //l++;
+          l++;
         }
-
-        l += 4;
-        intandchar int_;
-        int_.a = strtonum(t);
-        str3[count] += int_.b[0] + int_.b[1] + int_.b[2] + int_.b[3];
-        // output to check if the data is not match
-        cout << t << int_.a << endl;
       }
       while (str[i] != ',' && i < len - 1) i++;
       if (i != len - 1) i += 3;
@@ -132,43 +121,41 @@ void get_bin() {
 
     int ss = 0;
     //out << count << ' ';
-    char* a, b[4];
-    a = (char*)&count;
-    b[0] = *((char *)a + 0);
-    b[1] = *((char *)a + 1);
-    b[2] = *((char *)a + 2);
-    b[3] = *((char *)a + 3);
-    tmp += b[0] + b[1] + b[2] + b[3];
+    intandchar int_;
+    int_.a = count;
+
+    tmp += int_.b[0];
+    tmp += int_.b[1];
+    tmp += int_.b[2];
+    tmp += int_.b[3];
     //tmp += ' ';
     for (int j = 0; j < count; j++) {
       //out << aid[j] << ' ';
-      a = (char*)&(aid[j]);
-      b[0] = *((char *)a + 0);
-      b[1] = *((char *)a + 1);
-      b[2] = *((char *)a + 2);
-      b[3] = *((char *)a + 3);
-      tmp += b[0] + b[1] + b[2] + b[3];
+      int_.a = aid[j];
+
+      tmp += int_.b[0];
+      tmp += int_.b[1];
+      tmp += int_.b[2];
+      tmp += int_.b[3];
       //tmp += ' ';
     }
     for (int j = 0; j < count; j++) {
       //out << ss << ' ';
-      a = (char*)&ss;
-      b[0] = *((char *)a + 0);
-      b[1] = *((char *)a + 1);
-      b[2] = *((char *)a + 2);
-      b[3] = *((char *)a + 3);
-      tmp += b[0] + b[1] + b[2] + b[3];
+      int_.a = ss;
+      tmp += int_.b[0];
+      tmp += int_.b[1];
+      tmp += int_.b[2];
+      tmp += int_.b[3];
       //tmp += ' ';
       ss += off[j];
       sum += off[j];
     }
     //out << sum << ' ';
-    a = (char*)&sum;
-    b[0] = *((char *)a + 0);
-    b[1] = *((char *)a + 1);
-    b[2] = *((char *)a + 2);
-    b[3] = *((char *)a + 3);
-    tmp += b[0] + b[1] + b[2] + b[3];
+    int_.a = sum;
+    tmp += int_.b[0];
+    tmp += int_.b[1];
+    tmp += int_.b[2];
+    tmp += int_.b[3];
     //tmp += ' ';
     for (int j = 0; j < count; j++) {
       //for (unsigned int i = 0; i < str3[j].length(); i++) out << str3[j][i];
@@ -194,10 +181,8 @@ void get_bin() {
   cout << text << endl;
   fclose(out);*/
   out = NULL;
-
   fclose(stdin);
 }
-
 
 string sertojson(serial ser, catalog* scanlog1) {
   string ans = "", flag[5] = { "json", "array", "text", "int", "bool" };
