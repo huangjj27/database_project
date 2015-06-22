@@ -138,21 +138,21 @@ void get_bin() {
     for (int j = 0; j < count; j++) {
       //out << aid[j] << ' ';
       a = (char*)&(aid[j]);
-        b[0]=*((char *)a+0);
-            b[1]=*((char *)a+1);
-            b[2]=*((char *)a+2);
-            b[3]=*((char *)a+3);
-        tmp += b[0] + b[1] + b[2] + b[3];
+      b[0]=*((char *)a+0);
+      b[1]=*((char *)a+1);
+      b[2]=*((char *)a+2);
+      b[3]=*((char *)a+3);
+      tmp += b[0] + b[1] + b[2] + b[3];
       //tmp += ' ';
     }
     for (int j = 0; j < count; j++) {
       //out << ss << ' ';
       a = (char*)&ss;
       b[0]=*((char *)a+0);
-            b[1]=*((char *)a+1);
-            b[2]=*((char *)a+2);
-            b[3]=*((char *)a+3);
-        tmp += b[0] + b[1] + b[2] + b[3];
+      b[1]=*((char *)a+1);
+      b[2]=*((char *)a+2);
+      b[3]=*((char *)a+3);
+      tmp += b[0] + b[1] + b[2] + b[3];
       //tmp += ' ';
       ss += off[j];
       sum += off[j];
@@ -160,9 +160,9 @@ void get_bin() {
     //out << sum << ' ';
     a = (char*)&sum;
     b[0]=*((char *)a+0);
-        b[1]=*((char *)a+1);
-        b[2]=*((char *)a+2);
-        b[3]=*((char *)a+3);
+    b[1]=*((char *)a+1);
+    b[2]=*((char *)a+2);
+    b[3]=*((char *)a+3);
     tmp += b[0] + b[1] + b[2] + b[3];
     //tmp += ' ';
     for (int j = 0; j < count; j++) {
@@ -203,43 +203,43 @@ string sertojson(serial ser, catalog* scanlog1) {
         int id = ser.aid[i];
 
         ans += "\"";
-            ans += scanlog->key_name[id-1];
-          ans += "\"";
-          ans += ": ";
+        ans += scanlog->key_name[id-1];
+        ans += "\"";
+        ans += ": ";
       if ((scanlog->key_type[id-1]) == flag[0]) {
-          for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-              ans += ser.data[j];
-          }
+        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+          ans += ser.data[j];
+        }
       }
       if ((scanlog->key_type[id-1]) == flag[1]) {
-          for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-              ans += ser.data[j];
+        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+          ans += ser.data[j];
         }
       }
 
-        if ((scanlog->key_type[id-1]) == flag[2]) {
-          ans += "\"";
-          for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-              ans += ser.data[j];
-          }
-          ans += "\"";
+      if ((scanlog->key_type[id-1]) == flag[2]) {
+        ans += "\"";
+        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+          ans += ser.data[j];
+        }
+        ans += "\"";
       }
 
       if ((scanlog->key_type[id-1]) == flag[3]) {
         intandchar int_;
         int j_ = 0;
-          for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-              //ans += ser.data[j];
+        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+          //ans += ser.data[j];
           int_.b[j_] = ser.data[j];
           //ans += numtostr(tmp);
-          }
+        }
         ans += numtostr(int_.a);
       }
-        if ((scanlog->key_type[id-1]) == flag[4]) {
-          for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
-              if (ser.data[j] == 't') ans += "true";
-              if (ser.data[j] == 'f') ans += "false";
-          }
+      if ((scanlog->key_type[id-1]) == flag[4]) {
+        for (int j = ser.offset[i]; j < ser.offset[i] + ser.len[i]; j++) {
+          if (ser.data[j] == 't') ans += "true";
+          if (ser.data[j] == 'f') ans += "false";
+        }
       }
           if (i != ser.count - 1) ans += ", ";
       }
@@ -442,7 +442,7 @@ void find_A_equals_B(string key, string value, catalog* catalog) {
   input = NULL;
 }
 catalog read_catalog() {
-    struct catalog c;
+  struct catalog c;
   string str = "";
   string str1 = "";
   string str2 = "";
